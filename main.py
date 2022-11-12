@@ -1,7 +1,12 @@
 import streamlit as st
 import nltk
 import spacy
-from PIL import Image
+#from PIL import Image
+#from nltk.draw import TreeView
+from pathlib import Path
+from spacy import displacy
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -49,51 +54,60 @@ def pos_list(sentence):
         cols[1].write(sen_lst[i][1])
 
 
-def convert_to_png(ps_file):
-    img = Image.open(ps_file)
-    # basewidth = 500
-    # wpercent = (basewidth / float(img.size[0]))
-    # hsize = int((float(img.size[1]) * float(wpercent)))
-    # img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-    img.save("img.png", quality=100, subsampling=0)
+# def convert_to_png(ps_file):
+#     img = Image.open(ps_file)
+#     # basewidth = 500
+#     # wpercent = (basewidth / float(img.size[0]))
+#     # hsize = int((float(img.size[1]) * float(wpercent)))
+#     # img = img.resize((basewidth, hsize), Image.ANTIALIAS)
+#     img.save("img.png", quality=100, subsampling=0)
 
 
 def image_view(sentence):
-    # 문장을 단어 단위로 토큰화
-    words = nltk.tokenize.word_tokenize(sentence)
-
-    # 단어에 포스 태그 달기
-    pos_tags = nltk.pos_tag(words)
-
+    # # 문장을 단어 단위로 토큰화
+    # words = nltk.tokenize.word_tokenize(sentence)
+    #
+    # # 단어에 포스 태그 달기
+    # pos_tags = nltk.pos_tag(words)
+    #
+    # # grammar = r"""
+    # #         S : {<명사구> <동사구>}
+    # #         명사구: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
+    # #         전치사: {<IN>}               #To extract Prepositions
+    # #         동사: {<V.*>}              #To extract Verbs
+    # #         전치사 구: {<IN><NP>}        #To extract Prepositional Phrases
+    # #         동사구:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
+    # #         CLAUSE: {<NP><VP>}
+    # #     """
     # grammar = r"""
-    #         S : {<명사구> <동사구>}
-    #         명사구: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
-    #         전치사: {<IN>}               #To extract Prepositions
-    #         동사: {<V.*>}              #To extract Verbs
-    #         전치사 구: {<IN><NP>}        #To extract Prepositional Phrases
-    #         동사구:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
-    #         CLAUSE: {<NP><VP>}
-    #     """
-    grammar = r"""
-                S : {<NP> <VP>}
-                NP: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
-                P: {<IN>}               #To extract Prepositions
-                V: {<V.*>}              #To extract Verbs
-                PP: {<IN><NP>}        #To extract Prepositional Phrases
-                VP:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
-                CLAUSE: {<NP><VP>}
-            """
-    t = list(map(lambda sent: nltk.Tree(sent[1], children=[sent[0]]), pos_tags))
+    #             S : {<NP> <VP>}
+    #             NP: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
+    #             P: {<IN>}               #To extract Prepositions
+    #             V: {<V.*>}              #To extract Verbs
+    #             PP: {<IN><NP>}        #To extract Prepositional Phrases
+    #             VP:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
+    #             CLAUSE: {<NP><VP>}
+    #         """
+    # t = list(map(lambda sent: nltk.Tree(sent[1], children=[sent[0]]), pos_tags))
+    #
+    # NPChunker = nltk.RegexpParser(grammar)
+    #
+    # result = NPChunker.parse(t)
+    #
+    # TreeView(*result).cframe.print_to_file('output.ps')
+    #
+    # convert_to_png('output.ps')
+    # img = Image.open('img.png')
+    # st.image('img.png')
+    doc = nlp(sentence)
+    svg = displacy.render(doc, style='dep', jupyter=False)
+    filename = 'output.svg'
+    output_path = Path(filename)
+    output_path.open('w', encoding='utf-8').write(svg)
 
-    NPChunker = nltk.RegexpParser(grammar)
-
-    result = NPChunker.parse(t)
-
-    nltk.draw.tree.TreeView(result)._cframe.print_to_file('output.ps')
-
-    convert_to_png('output.ps')
-    img = Image.open('img.png')
-    st.image('img.png')
+    drawing = svg2rlg('output.svg')
+    renderPM.drawToFile(drawing, 'output.png', fmt='PNG')
+    st.image('output.png')
 
 
 def main():
