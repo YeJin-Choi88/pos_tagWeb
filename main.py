@@ -2,7 +2,7 @@ import streamlit as st
 import nltk
 import spacy
 from PIL import Image
-nltk.draw.download('tree')
+
 nlp = spacy.load('en_core_web_sm')
 
 
