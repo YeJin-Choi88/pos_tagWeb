@@ -112,7 +112,7 @@ def image_view(sentence):
 
 def main():
     # 제목
-    st.markdown("<h1 style='text-align: center; color: black;'>문장 구조 분석하기\n\n</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black;'>영어 문장 구조 분석하기\n\n</h1>", unsafe_allow_html=True)
     sentence = want_sentence()
     if st.button("Click"):
         st.write(sentence)
