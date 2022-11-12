@@ -2,7 +2,7 @@ import streamlit as st
 import nltk
 import spacy
 from PIL import Image
-from nltk.draw import TreeView
+
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -90,7 +90,7 @@ def image_view(sentence):
 
     result = NPChunker.parse(t)
 
-    TreeView(*result)._cframe.print_to_file('output.ps')
+    nltk.draw.TreeView(*result)._cframe.print_to_file('output.ps')
 
     convert_to_png('output.ps')
     img = Image.open('img.png')
