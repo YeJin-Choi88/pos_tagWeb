@@ -90,7 +90,7 @@ def image_view(sentence):
 
     result = NPChunker.parse(t)
 
-    nltk.draw.TreeView(*result)._cframe.print_to_file('output.ps')
+    nltk.draw.tree.TreeView(result)._cframe.print_to_file('output.ps')
 
     convert_to_png('output.ps')
     img = Image.open('img.png')
