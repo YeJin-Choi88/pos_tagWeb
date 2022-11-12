@@ -2,8 +2,8 @@ import streamlit as st
 import nltk
 import spacy
 from PIL import Image
+from nltk.draw import TreeView
 
-nltk.download('averaged_perceptron_tagger')
 nlp = spacy.load('en_core_web_sm')
 
 
@@ -90,7 +90,7 @@ def image_view(sentence):
 
     result = NPChunker.parse(t)
 
-    nltk.draw.TreeView(result)._cframe.print_to_file('output.ps')
+    TreeView(*result)._cframe.print_to_file('output.ps')
 
     convert_to_png('output.ps')
     img = Image.open('img.png')
