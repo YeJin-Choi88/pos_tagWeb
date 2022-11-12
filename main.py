@@ -3,7 +3,7 @@ import nltk
 import spacy
 from PIL import Image
 
-
+nltk.download('all')
 nlp = spacy.load('en_core_web_sm')
 
 
