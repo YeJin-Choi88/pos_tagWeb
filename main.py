@@ -131,7 +131,8 @@ def svg_view(sentence):
 
     render_svg(line_string)
     
- def dep_mean_view():
+    
+def dep_mean_view():
     dep_mean = {"nsubj":"문장의 주어를 나타내는 명사와 절의 동작주, 행위자 간의 관계(명사 주어)",
                 "obj":"목적어 관계", "dobj":"직접 목적어 관계", "iobj":"간접 목적어 관계", "csubj" : "주어 역할을 하는 절의 관계",
                 "ccomp":"동사나 형용사의 ccomp는 종속절의 core argument, 동사나 형용사의 목적어 역할을 함",
@@ -158,7 +159,7 @@ def svg_view(sentence):
         cols2[1].write(dep_mean_list[i][1])
 
 
-def pos_mean_view():
+        def pos_mean_view():
     pos_dic = {"CC": "접속사", "CD": "숫자", "DT": "한정사", "EX": "존재의 there", "FW": "외래어", "IN": "전치사",
                "JJ": "형용사", "JJR": "비교급 형용사", "JJS": "최상급 형용사", "LS": "괄호", "MD": "조동사",
                "NN": "단수 명사", "NNS": "복수 명사", "NNP": "단수 고유명사", "NNPS": "복수 고유명사", "PDT": "전치 한정사",
