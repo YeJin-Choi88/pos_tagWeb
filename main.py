@@ -1,19 +1,17 @@
 import streamlit as st
-import nltk
 import spacy
 import base64
-#from PIL import Image
-#from nltk.draw import TreeView
 from pathlib import Path
 from spacy import displacy
 from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 
+
 nlp = spacy.load('en_core_web_sm')
 
 
 def want_sentence():
-    sentence = st.text_input("문장을 입력하세요: ")
+    sentence = st.text_input(label="문장을 입력하세요: ", key='user_sentence')
     return sentence
 
 
@@ -55,51 +53,8 @@ def pos_list(sentence):
         cols[1].write(sen_lst[i][1])
 
 
-# def convert_to_png(ps_file):
-#     img = Image.open(ps_file)
-#     # basewidth = 500
-#     # wpercent = (basewidth / float(img.size[0]))
-#     # hsize = int((float(img.size[1]) * float(wpercent)))
-#     # img = img.resize((basewidth, hsize), Image.ANTIALIAS)
-#     img.save("img.png", quality=100, subsampling=0)
-
-
 def image_view(sentence):
-    # # 문장을 단어 단위로 토큰화
-    # words = nltk.tokenize.word_tokenize(sentence)
-    #
-    # # 단어에 포스 태그 달기
-    # pos_tags = nltk.pos_tag(words)
-    #
-    # # grammar = r"""
-    # #         S : {<명사구> <동사구>}
-    # #         명사구: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
-    # #         전치사: {<IN>}               #To extract Prepositions
-    # #         동사: {<V.*>}              #To extract Verbs
-    # #         전치사 구: {<IN><NP>}        #To extract Prepositional Phrases
-    # #         동사구:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
-    # #         CLAUSE: {<NP><VP>}
-    # #     """
-    # grammar = r"""
-    #             S : {<NP> <VP>}
-    #             NP: {<DT|JJ|NN.*>+}    #To extract Noun Phrases
-    #             P: {<IN>}               #To extract Prepositions
-    #             V: {<V.*>}              #To extract Verbs
-    #             PP: {<IN><NP>}        #To extract Prepositional Phrases
-    #             VP:  {<VB.*><NP|PP|CLAUSE>+$}     #To extract Verb Phrases
-    #             CLAUSE: {<NP><VP>}
-    #         """
-    # t = list(map(lambda sent: nltk.Tree(sent[1], children=[sent[0]]), pos_tags))
-    #
-    # NPChunker = nltk.RegexpParser(grammar)
-    #
-    # result = NPChunker.parse(t)
-    #
-    # TreeView(*result).cframe.print_to_file('output.ps')
-    #
-    # convert_to_png('output.ps')
-    # img = Image.open('img.png')
-    # st.image('img.png')
+
     doc = nlp(sentence)
     svg = displacy.render(doc, style='dep', jupyter=False)
     filename = 'output.svg'
@@ -109,6 +64,10 @@ def image_view(sentence):
     drawing = svg2rlg('output.svg')
     renderPM.drawToFile(drawing, 'output.png', fmt='PNG')
     st.image('output.png')
+
+
+
+
 
 def render_svg(svg):
     """Renders the given svg string."""
@@ -129,8 +88,8 @@ def svg_view(sentence):
     line_string = ''.join(lines)
 
     render_svg(line_string)
-    
-    
+
+
 def dep_mean_view():
     dep_mean = {"nsubj":"문장의 주어를 나타내는 명사와 절의 동작주, 행위자 간의 관계(명사 주어)",
                 "obj":"목적어 관계", "dobj":"직접 목적어 관계", "iobj":"간접 목적어 관계", "csubj" : "주어 역할을 하는 절의 관계",
@@ -158,7 +117,7 @@ def dep_mean_view():
         cols2[1].write(dep_mean_list[i][1])
 
 
-        def pos_mean_view():
+def pos_mean_view():
     pos_dic = {"CC": "접속사", "CD": "숫자", "DT": "한정사", "EX": "존재의 there", "FW": "외래어", "IN": "전치사",
                "JJ": "형용사", "JJR": "비교급 형용사", "JJS": "최상급 형용사", "LS": "괄호", "MD": "조동사",
                "NN": "단수 명사", "NNS": "복수 명사", "NNP": "단수 고유명사", "NNPS": "복수 고유명사", "PDT": "전치 한정사",
@@ -171,22 +130,21 @@ def dep_mean_view():
         cols3 = st.columns(2)
         cols3[0].write(pos_dic_list[i][0])
         cols3[1].write(pos_dic_list[i][1])
-        
-        
+
 def main():
     # 제목
-    st.markdown("<h1 style='text-align: center; color: black;'>영어 문장 구조 분석하기\n\n</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: black;'>문장 구조 분석하기\n\n</h1>", unsafe_allow_html=True)
     sentence = want_sentence()
     if st.button("Click"):
+
         st.write(sentence)
         pos_list(sentence)
-        image_view(sentence)
+        svg_view(sentence)
     option = st.selectbox('뜻 보기',
                           (' ', '단어 관계 뜻 보기', 'POS 뜻 보기'))
     if option == '단어 관계 뜻 보기':
         dep_mean_view()
     elif option == 'POS 뜻 보기':
         pos_mean_view()
-
 
 main()
