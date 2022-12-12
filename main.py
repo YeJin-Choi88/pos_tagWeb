@@ -100,11 +100,10 @@ def dep_mean_view():
     
     sorted_dict = sorted(dep_mean.items())
 
-    dep_mean_list = list(sorted_dict.items())
-    for i in range(len(dep_mean_list)):
+    for i in range(len(sorted_dict)):
         cols2 = st.columns(2)
-        cols2[0].write(dep_mean_list[i][0])
-        cols2[1].write(dep_mean_list[i][1])
+        cols2[0].write(sorted_dict[i][0])
+        cols2[1].write(sorted_dict[i][1])
 
 
 def pos_mean_view():
