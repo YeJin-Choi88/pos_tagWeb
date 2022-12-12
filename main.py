@@ -92,9 +92,15 @@ def dep_mean_view():
                 "fixed":"숙어 관계", "flat":"이름 날짜간의 동격 관계", "compound":"복합어","list":"나열",
                 "orphan":"지배소가 생략된 경우","goeswith":"편집이 잘못되어 떨어진 단어들",
                 "reparandum":"발화에서 말을 더듬은 경우", "punck":"문장 부호 관계", "root":"루트 관계",
-                "dep":"알수 없는 관계"}
+                "dep":"알수 없는 관계", "neg":"부정 단어", "pcommp":"전치사의 보어가 절이거나 전치사구(또는 간혹 부사구)",
+                "pobj":"전치사 또는 'here'와 'there' 부사 뒤에 오는 명사구의 헤드", 
+                "preconj":"'either', 'both', 'neither' 등 접속어를 묶을 때 그 앞에 나타나는 단어".
+                "predet":"명사구 한정사의 앞에서 그 의미를 수식", 
+                "pref":"접두사","prep":"동사, 형용사, 명사 또는 심지어 다른 전치사의 의미를 수식"}
+    
+    sorted_dict = sorted(dep_mean.items())
 
-    dep_mean_list = list(dep_mean.items())
+    dep_mean_list = list(sorted_dict.items())
     for i in range(len(dep_mean_list)):
         cols2 = st.columns(2)
         cols2[0].write(dep_mean_list[i][0])
