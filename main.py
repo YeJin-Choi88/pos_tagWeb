@@ -53,22 +53,6 @@ def pos_list(sentence):
         cols[1].write(sen_lst[i][1])
 
 
-def image_view(sentence):
-
-    doc = nlp(sentence)
-    svg = displacy.render(doc, style='dep', jupyter=False)
-    filename = 'output.svg'
-    output_path = Path(filename)
-    output_path.open('w', encoding='utf-8').write(svg)
-
-    drawing = svg2rlg('output.svg')
-    renderPM.drawToFile(drawing, 'output.png', fmt='PNG')
-    st.image('output.png')
-
-
-
-
-
 def render_svg(svg):
     """Renders the given svg string."""
     b64 = base64.b64encode(svg.encode('utf-8')).decode("utf-8")
